@@ -6,7 +6,7 @@ interface CommandHistoryProps {
 
 const CommandHistory: React.FC<CommandHistoryProps> = (props: CommandHistoryProps) => {
     return (
-        <div className="App">
+        <div>
             {props.history.map(data => <div className="cli-text">{data}</div>)}
         </div>
     );
