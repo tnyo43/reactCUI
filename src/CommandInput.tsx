@@ -30,6 +30,7 @@ class CommandInput extends React.Component<CommandInputProps, CommandInputState>
         return (
             <div>
                 <input
+                    className="cli-input"
                     onChange={value => this.setState({text: value.target.value})}
                     value={this.state.text}
                     onKeyDown={this.onKeyDown}
