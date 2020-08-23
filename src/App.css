@@ -8,6 +8,7 @@
 .cli-text {
   font-family: "Space Mono";
   font-size: 20px;
+  display: flex;
 }
 
 .cli-input {
@@ -18,4 +19,22 @@
   border: 0;
   outline: none;
   display: block;
+}
+
+.user-span {
+  font-family: "Space Mono"; 
+  font-size: 20px;
+  color: #fce300;
+  padding-right: 8px;
+}
+
+.dir-span {
+  font-family: "Space Mono"; 
+  font-size: 20px;
+  color: #e05a00;
+  padding-right: 8px;
+}
+
+.input-div {
+  display: flex;
 }

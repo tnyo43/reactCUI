@@ -7,7 +7,7 @@ interface AppProps {
 }
 
 interface AppState {
-	history: Array<string>;
+	history: Array<[string, string, string]>;
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -21,16 +21,16 @@ class App extends React.Component<AppProps, AppState> {
 		this.executeCommand = this.executeCommand.bind(this);
 	}
 
-	executeCommand(command: string) {
+	executeCommand(user: string, dir: string, command: string) {
 		console.log("executeCommand", command);
-		this.setState({history: this.state.history.concat(command)});
+		this.setState({history: this.state.history.concat([[user, dir, command]])});
 	}
 
 	render() {
 		return (
 			<div className="App">
 				<CommandHistory history={this.state.history}/>
-				<CommandInput executeCommand={this.executeCommand}/>
+				<CommandInput username="tomoya" executeCommand={this.executeCommand}/>
 			</div>
 		);
 	}
