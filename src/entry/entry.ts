@@ -1,4 +1,8 @@
 export class FileTreatmentError extends Error {
+	constructor(msg: string) {
+		super(msg);
+		Object.setPrototypeOf(this, FileTreatmentError.prototype);
+	}
 }
 
 export default abstract class Entry {
@@ -16,6 +20,12 @@ export default abstract class Entry {
 
 	public set parent(parent: Entry | null) {
 		this._parent = parent;
+	}
+
+	public root(): Entry {
+		let entry: Entry = this;
+		while (entry.parent !== null) entry = entry.parent;
+		return entry;
 	}
 
 	public add(_entry: Entry): Entry {

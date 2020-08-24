@@ -1,12 +1,13 @@
 import React from 'react';
+import Entry from './entry/entry'
 
 interface CommandInputProps {
     username: string,
-    executeCommand: (username: string, dir: string, command: string) => void
+    entry: Entry,
+    executeCommand: (command: string) => void
 }
 
 interface CommandInputState {
-    dir: string,
     text: string
 }
 
@@ -15,7 +16,6 @@ class CommandInput extends React.Component<CommandInputProps, CommandInputState>
         super(props);
 
         this.state = {
-            dir: "/",
             text: ""
         };
 
@@ -24,7 +24,7 @@ class CommandInput extends React.Component<CommandInputProps, CommandInputState>
 
     onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
         if (event.keyCode === 13) { // Enter Key
-            this.props.executeCommand(this.props.username, this.state.dir, this.state.text);
+            this.props.executeCommand(this.state.text);
             this.setState({text: ""});
         }
     }
@@ -33,7 +33,7 @@ class CommandInput extends React.Component<CommandInputProps, CommandInputState>
         return (
             <div className="input-div">
                 <span className="user-span">{this.props.username}</span>
-                <span className="dir-span">{this.state.dir}</span>
+                <span className="dir-span">{`${this.props.entry.getName()} $`}</span>
                 <input
                     className="cli-input"
                     onChange={value => this.setState({text: value.target.value})}

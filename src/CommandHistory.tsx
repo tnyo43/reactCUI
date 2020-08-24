@@ -1,20 +1,18 @@
 import React from 'react';
+import { Result } from './execute';
 
 interface CommandHistoryProps {
-    history: Array<[string, string, string]>
+    history: Array<Result>
 }
 
 const CommandHistory: React.FC<CommandHistoryProps> = (props: CommandHistoryProps) => {
     return (
         <div>
             {props.history.map(data =>
-                console.log(data))
-            }
-            {props.history.map(data =>
                 <div className="cli-text">
-                    <span className="user-span">{data[0]}</span>
-                    <span className="dir-span">{data[1]}</span>
-                    <span>{data[2]}</span>
+                    <span className="user-span">{data.username}</span>
+                    <span className="dir-span">{`${data.entry.getName()} $`}</span>
+                    <span>{data.command}</span>
                 </div>
             )}
         </div>
