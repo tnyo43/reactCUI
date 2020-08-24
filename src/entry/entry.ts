@@ -22,7 +22,7 @@ export default abstract class Entry {
 		this._parent = parent;
 	}
 
-	public root(): Entry {
+	public getRoot(): Entry {
 		let entry: Entry = this;
 		while (entry.parent !== null) entry = entry.parent;
 		return entry;

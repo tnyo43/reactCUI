@@ -28,7 +28,7 @@ export default class ExecuteCommand {
 	private cd(args: Array<string>, command: string): Result {
 		const current = this.entry;
 		if (args.length === 0) {
-			this.entry = this.entry.root();
+			this.entry = this.entry.getRoot();
 			while (this.entry.parent !== null) this.entry = this.entry.parent;
 			return {
 				username: this._username,

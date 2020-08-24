@@ -6,8 +6,19 @@ export default class Directory extends Entry {
 
 	constructor(name: string) {
 		super();
+		if (name === "") {
+			throw new FileTreatmentError(`directory with empty name is invalid`);
+		}
 		this.name = name;
 		this.directory = [];
+	}
+
+	public static root() {
+		return (() => {
+			const root = new Directory("root");
+			root.name = "";
+			return root;
+		})();
 	}
 
 	public add(entry: Entry): Entry {
@@ -42,8 +53,8 @@ export default class Directory extends Entry {
 	}
 
 	public ls(): Array<string> {
-		const sorted = this.directory.map(e => e.getName()).sort();
-		return sorted;
+		console.log(this.directory);
+		return this.directory.map(e => e.getName()).sort();
 	}
 
 	public getName() {

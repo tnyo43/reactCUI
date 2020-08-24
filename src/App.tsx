@@ -14,11 +14,12 @@ interface AppState {
 }
 
 const directoryTree = () => {
-	const root = new Directory("");
+	const root = Directory.root();
 	const product = new Directory("product");
 	const documents = new Directory("documents");
 	root.add(product);
 	root.add(documents);
+	console.log(root);
 
 	const poem = new File("poem.txt");
 	const photo = new File("photo.png");

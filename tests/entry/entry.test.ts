@@ -12,7 +12,7 @@ describe("directory", () => {
 	 *         |- note.tex
 	 */
 
-	const root = new Directory("/");
+	const root = Directory.root();
 	const product = new Directory("product");
 	const documents = new Directory("documents");
 	root.add(product);
