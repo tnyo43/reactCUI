@@ -1,0 +1,40 @@
+.App {
+  width: 94%;
+  height: 100%;
+  padding: 20px;
+  color: white;
+}
+
+.cli-text {
+  font-family: "Space Mono";
+  font-size: 20px;
+  display: flex;
+}
+
+.cli-input {
+  font-family: "Space Mono"; 
+  background-color: #282c34;
+  color: white;
+  font-size: 20px;
+  border: 0;
+  outline: none;
+  display: block;
+}
+
+.user-span {
+  font-family: "Space Mono"; 
+  font-size: 20px;
+  color: #fce300;
+  padding-right: 8px;
+}
+
+.dir-span {
+  font-family: "Space Mono"; 
+  font-size: 20px;
+  color: #e05a00;
+  padding-right: 8px;
+}
+
+.input-div {
+  display: flex;
+}
