@@ -40,6 +40,10 @@ describe("directory", () => {
 		expect(() => product.cd("photo.png")).toThrowError();
 	});
 
+	test("lsは子の一覧", () => {
+		expect(documents.ls()).toEqual(["memo.txt", "note.tex"])
+	});
+
 	test("mkdirは子に同名のEntryがない、またその時のみ成功する", () => {
 		expect(() => documents.mkdir("submit")).not.toThrowError();
 		expect(() => documents.mkdir("memo.txt")).toThrowError();

@@ -32,12 +32,21 @@ export default abstract class Entry {
 		throw new FileTreatmentError("this Entry is NOT able to executable \"add\"");
 	}
 
+	public pwd(): string {
+		const name = ((this.parent === null) ? "" : this.parent.pwd()) + "/" + this.getName();
+		return name.replace("//", "/");
+	}
+
 	public mkdir(_name: string): Entry {
 		throw new FileTreatmentError("this Entry is NOT able to executable \"mkdir\"");
 	}
 
 	public cd(_name: string): Entry {
 		throw new FileTreatmentError("this Entry is NOT able to executable \"cd\"");
+	}
+
+	public ls(): Array<string> {
+		throw new FileTreatmentError("this Entry is NOT able to executable \"ls\"");
 	}
 
 	public edit(_content: string) {

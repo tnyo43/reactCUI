@@ -41,6 +41,11 @@ export default class Directory extends Entry {
 		throw new FileTreatmentError(`cd: no such file or directory: ${name}`);
 	}
 
+	public ls(): Array<string> {
+		const sorted = this.directory.map(e => e.getName()).sort();
+		return sorted;
+	}
+
 	public getName() {
 		return this.name;
 	}

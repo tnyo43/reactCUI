@@ -16,6 +16,15 @@ export default class ExecuteCommand {
 		this.entry = entry;
 	}
 
+	private pwd(command: string): Result {
+		return {
+			username: this._username,
+			entry: this.entry,
+			command: command,
+			result: this.entry.pwd()
+		};
+	}
+
 	private cd(args: Array<string>, command: string): Result {
 		const current = this.entry;
 		if (args.length === 0) {
@@ -57,6 +66,45 @@ export default class ExecuteCommand {
 		};
 	}
 
+	private ls(command: string): Result {
+		return {
+			username: this._username,
+			entry: this.entry,
+			command: command,
+			result: this.entry.ls().join("\n")
+		};
+	}
+
+	private mkdir(args: Array<string>, command: string): Result {
+		if (args.length === 0) {
+			return {
+				username: this._username,
+				entry: this.entry,
+				command: command,
+				result: "usage: mkdir directory"
+			};
+		}
+
+		let result: string | null = null;
+
+		try {
+			this.entry.mkdir(args[0]);
+		} catch (e) {
+			if (e instanceof FileTreatmentError) {
+				result = e.message;
+			} else {
+				throw e;
+			}
+		}
+
+		return {
+			username: this._username,
+			entry: this.entry,
+			command: command,
+			result: result
+		};
+	}
+
 	public execute(command: string): Result {
 		const words = command.split(" ").filter(x => x !== '');
 		if (words.length === 0) {
@@ -71,8 +119,17 @@ export default class ExecuteCommand {
 		const args = words.slice(1);
 
 		switch (words[0]) {
+			case "pwd":
+				return this.pwd(command);
+
 			case "cd":
 				return this.cd(args, command);
+
+			case "ls":
+				return this.ls(command);
+
+			case "mkdir":
+				return this.mkdir(args, command);
 
 			default:
 				return {

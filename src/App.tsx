@@ -14,7 +14,7 @@ interface AppState {
 }
 
 const directoryTree = () => {
-	const root = new Directory("/");
+	const root = new Directory("");
 	const product = new Directory("product");
 	const documents = new Directory("documents");
 	root.add(product);
