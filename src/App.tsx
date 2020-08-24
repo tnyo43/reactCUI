@@ -59,7 +59,12 @@ class App extends React.Component<AppProps, AppState> {
 		return (
 			<div className="App">
 				<CommandHistory history={this.state.history}/>
-				<CommandInput username={this.exec.username} entry={this.exec.dir} executeCommand={this.executeCommand}/>
+				<CommandInput
+					username={this.exec.username}
+					entry={this.exec.dir}
+					history={this.state.history.map(result => result.command).filter(command => command.replace(/\s/g, '').length > 0)}
+					executeCommand={this.executeCommand}
+				/>
 			</div>
 		);
 	}
