@@ -17,7 +17,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && mv build docs",
     "test": "jest",
     "eject": "react-scripts eject"
   },
@@ -62,5 +62,6 @@
       "@(components|helper|redux|config|modules|style)?/(.*)": "<rootDir>/src/$1/$2",
       "\\.(css|less|scss|sss|styl)$": "<rootDir>/node_modules/jest-css-modules"
     }
-  }
+  },
+  "homepage":"https://tnyo43.github.io/reactCUI/"
 }
