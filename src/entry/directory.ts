@@ -38,23 +38,31 @@ export default class Directory extends Entry {
 		return newdir;
 	}
 
-	public cd(name: string): Entry {
+	public get(name: string, command: string = "get"): Entry {
 		for (let entry of this.directory) {
 			if (entry.getName() !== name) 
 				continue;
 
-			if (entry instanceof Directory) {
-				return entry;
-			} else {
-				throw new FileTreatmentError(`cd: not a directory: ${name}`);
-			}
+			return entry;
 		}
-		throw new FileTreatmentError(`cd: no such file or directory: ${name}`);
+		throw new FileTreatmentError(`${command}: no such file or directory: ${name}`);
+	}
+
+	public cd(name: string): Entry {
+		const entry = this.get(name, "cd");
+		if (entry instanceof Directory) {
+			return entry;
+		} else {
+			throw new FileTreatmentError(`cd: not a directory: ${name}`);
+		}
 	}
 
 	public ls(): Array<string> {
-		console.log(this.directory);
 		return this.directory.map(e => e.getName()).sort();
+	}
+
+	public cat(): string {
+		throw new FileTreatmentError(`cat: ${this.getName()}: Is a directory`);
 	}
 
 	public getName() {

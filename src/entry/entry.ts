@@ -41,6 +41,10 @@ export default abstract class Entry {
 		throw new FileTreatmentError("this Entry is NOT able to executable \"mkdir\"");
 	}
 
+	public get(_name: string, _command: string): Entry {
+		throw new FileTreatmentError("this Entry is NOT able to executable \"get\"");
+	}
+
 	public cd(_name: string): Entry {
 		throw new FileTreatmentError("this Entry is NOT able to executable \"cd\"");
 	}

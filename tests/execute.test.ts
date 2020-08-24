@@ -55,4 +55,11 @@ describe("Execute", () => {
 		expect(execute.execute("mkdir newdocuments").result).toEqual(null);
 		expect(execute.execute("ls").result).toEqual("memo.txt\nnewdocuments\nnote.tex\nsubdocuments");
 	});
+
+	test("'cat xxx'はFileEntry xxxがあるときのみ成功する", () => {
+		console.log(execute.execute("pwd"));
+		note.edit("I wrote note at Noto hanto");
+		expect(execute.execute("cat note.tex").result).toEqual("I wrote note at Noto hanto");
+		expect(execute.execute("cat xxxx").result).toEqual("cat: no such file or directory: xxxx");
+	});
 });

@@ -105,6 +105,36 @@ export default class ExecuteCommand {
 		};
 	}
 
+	private cat(args: Array<string>, command: string): Result {
+		if (args.length === 0) {
+			return {
+				username: this._username,
+				entry: this.entry,
+				command: command,
+				result: "usage: cat file"
+			};
+		}
+
+		let result: string | null = null;
+
+		try {
+			result = this.entry.get(args[0], "cat").cat();
+		} catch (e) {
+			if (e instanceof FileTreatmentError) {
+				result = e.message;
+			} else {
+				throw e;
+			}
+		}
+
+		return {
+			username: this._username,
+			entry: this.entry,
+			command: command,
+			result: result
+		};
+	}
+
 	public execute(command: string): Result {
 		const words = command.split(" ").filter(x => x !== '');
 		if (words.length === 0) {
@@ -130,6 +160,9 @@ export default class ExecuteCommand {
 
 			case "mkdir":
 				return this.mkdir(args, command);
+
+			case "cat":
+				return this.cat(args, command);
 
 			default:
 				return {

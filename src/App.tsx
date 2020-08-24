@@ -19,14 +19,15 @@ const directoryTree = () => {
 	const documents = new Directory("documents");
 	root.add(product);
 	root.add(documents);
-	console.log(root);
 
 	const poem = new File("poem.txt");
+	poem.edit("poepoe poem");
 	const photo = new File("photo.png");
 	product.add(poem);
 	product.add(photo);
 
 	const memo = new File("memo.txt");
+	memo.edit("memo is memorial");
 	const note = new File("note.tex");
 	documents.add(memo);
 	documents.add(note);
