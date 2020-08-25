@@ -1,7 +1,6 @@
 import Entry, { FileTreatmentError } from '../entry/entry';
 import Execute from './execute';
 import Context from './context';
-import Directory from '../entry/directory';
 import File from '../entry/file';
 
 

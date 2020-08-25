@@ -1,0 +1,26 @@
+.vim-app {
+  height: 100%;
+  color: white;
+  font-family: "Space Mono";
+  font-feature-settings: "liga" 0;
+  font-size: 20px;
+}
+
+.vim-app-edit-area {
+  height: calc(100% - 29px);
+}
+
+.vim-mode-text {
+  position: absolute;
+  bottom: 0;
+  height: 29px;
+  width: 100%;
+}
+
+.vim-cursor {
+  position: absolute;
+  height: 29px;
+  width: 12.25px;
+  color:black;
+  background-color: white;
+}

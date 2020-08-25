@@ -7,9 +7,11 @@ import Directory from './entry/directory';
 
 import Context from './mode/context';
 import ExecuteCommand, { Result } from './mode/executeCommand';
+import ExecuteVim from './mode/executeVim';
+
+import Vim from './Vim'
 
 import './App.css';
-import ExecuteVim from './mode/executeVim';
 
 
 interface AppState {
@@ -68,7 +70,6 @@ class App extends React.Component<{}, AppState> {
 		if (this.inputRef.current) {
 			this.inputRef.current.focus();
 		}
-		console.log("handleClick");
 	}
 
 	render() {
@@ -89,8 +90,8 @@ class App extends React.Component<{}, AppState> {
 			);
 		} else if (exec instanceof ExecuteVim) {
 			return (
-				<div></div>
-			);
+				<Vim exec={exec}/>
+			)
 		}
 	}
 }

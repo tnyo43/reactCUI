@@ -44,12 +44,11 @@ export default class Context {
 	}
 
 	setVim(file: File) {
-		this.executeVim.setFile(file);
+		this.executeVim.file = file;
 	}
 
 	changeMode(mode: Mode) {
 		console.log(`CHANGE MODE: ${this.mode} -> ${mode}`);
 		this.mode = mode;
-		console.log(this.mode);
 	}
 }
