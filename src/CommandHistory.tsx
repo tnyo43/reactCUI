@@ -15,8 +15,8 @@ const CommandHistory: React.FC<CommandHistoryProps> = (props: CommandHistoryProp
                         <span className="dir-span">{`${data.entry.getName()} $`}</span>
                         <span>{data.command}</span>
                     </div>
-                    <div className="cli-text">
-                        {data.result}
+                    <div className="cli-result">
+                        {data.result.map(r => <div>{r}</div>)}
                     </div>
                 </>
             )}

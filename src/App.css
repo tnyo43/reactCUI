@@ -38,3 +38,12 @@
 .input-div {
   display: flex;
 }
+
+.cli-result {
+  font-family: "Space Mono";
+  font-size: 20px;
+}
+
+.cli-result div {
+  height: 29px
+}

@@ -4,7 +4,7 @@ export interface Result {
     username: string,
     entry: Entry,
     command: string,
-    result: string | null
+    result: Array<string>
 }
 
 export default class ExecuteCommand {
@@ -16,12 +16,30 @@ export default class ExecuteCommand {
 		this.entry = entry;
 	}
 
+	private help(command: string): Result {
+		const result = [
+			"Basic commands"
+			,""
+			,"pwd :show path of current directory."
+			,"cd [dir] :change directory."
+			,"ls :list segments."
+			,"mkdir [dir] :create new directory."
+			,"cat [file] :open txt or md files."
+		];
+		return {
+			username: this._username,
+			entry: this.entry,
+			command: command,
+			result: result
+		};
+	}
+
 	private pwd(command: string): Result {
 		return {
 			username: this._username,
 			entry: this.entry,
 			command: command,
-			result: this.entry.pwd()
+			result: [this.entry.pwd()]
 		};
 	}
 
@@ -34,11 +52,11 @@ export default class ExecuteCommand {
 				username: this._username,
 				entry: current,
 				command: command,
-				result: null
+				result: []
 			};
 		}
 
-		let result: string | null = null;
+		let result: Array<string> = [];
 
 		if (args[0] === "..") {
 			this.entry = (this.entry.parent) ? this.entry.parent : this.entry;
@@ -51,7 +69,7 @@ export default class ExecuteCommand {
 			} catch (e) {
 				if (e instanceof FileTreatmentError) {
 					this.entry = current;
-					result = e.message;
+					result.push(e.message);
 				} else {
 					throw e;
 				}
@@ -71,7 +89,7 @@ export default class ExecuteCommand {
 			username: this._username,
 			entry: this.entry,
 			command: command,
-			result: this.entry.ls().join("\n")
+			result: this.entry.ls()
 		};
 	}
 
@@ -81,17 +99,17 @@ export default class ExecuteCommand {
 				username: this._username,
 				entry: this.entry,
 				command: command,
-				result: "usage: mkdir directory"
+				result: ["usage: mkdir directory"]
 			};
 		}
 
-		let result: string | null = null;
+		let result: Array<string> = [];
 
 		try {
 			this.entry.mkdir(args[0]);
 		} catch (e) {
 			if (e instanceof FileTreatmentError) {
-				result = e.message;
+				result.push(e.message);
 			} else {
 				throw e;
 			}
@@ -111,17 +129,17 @@ export default class ExecuteCommand {
 				username: this._username,
 				entry: this.entry,
 				command: command,
-				result: "usage: cat file"
+				result: ["usage: cat file"]
 			};
 		}
 
-		let result: string | null = null;
+		let result: Array<string> = [];
 
 		try {
-			result = this.entry.get(args[0], "cat").cat();
+			result.push(this.entry.get(args[0], "cat").cat());
 		} catch (e) {
 			if (e instanceof FileTreatmentError) {
-				result = e.message;
+				result.push(e.message);
 			} else {
 				throw e;
 			}
@@ -142,13 +160,16 @@ export default class ExecuteCommand {
 				username: this._username,
 				entry: this.entry,
 				command: command,
-				result: null
+				result: []
 			};
 		}
 
 		const args = words.slice(1);
 
 		switch (words[0]) {
+			case "help":
+				return this.help(command);
+
 			case "pwd":
 				return this.pwd(command);
 
@@ -169,7 +190,7 @@ export default class ExecuteCommand {
 					username: this._username,
 					entry: this.entry,
 					command: command,
-					result: `command not found: ${words[0]}`
+					result: [`command not found: ${words[0]}`]
 				};
 		}
 
