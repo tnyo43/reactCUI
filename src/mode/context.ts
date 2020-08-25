@@ -4,7 +4,6 @@ import ExecuteVim from './executeVim';
 
 import Entry from '../entry/entry';
 import File from '../entry/file';
-import { timeStamp } from 'console';
 
 
 export type Mode = "normal" | "vim";
@@ -35,6 +34,7 @@ export default class Context {
 	}
 
 	getExecute(): Execute {
+		console.log(this.mode);
 		switch (this.mode) {
 			case "normal":
 				return this.executeCommand;
@@ -44,7 +44,7 @@ export default class Context {
 	}
 
 	setVim(file: File) {
-		this.executeVim.file = file;
+		this.executeVim.setFile(file, this.executeCommand.dir);
 	}
 
 	changeMode(mode: Mode) {

@@ -14,7 +14,7 @@ export interface Result {
 export default class ExecuteCommand implements Execute {
 	private _username: string;
 	private entry: Entry;
-	_context: Context;
+	private _context: Context;
 
 	private constructor(_context: Context, username: string, entry: Entry) {
 		this._context = _context;
@@ -154,7 +154,7 @@ export default class ExecuteCommand implements Execute {
 		let result: Array<string> = [];
 
 		try {
-			result.push(this.entry.get(args[0], "cat").cat());
+			result = result.concat(this.entry.get(args[0], "cat").cat().split("\n"));
 		} catch (e) {
 			if (e instanceof FileTreatmentError) {
 				result.push(e.message);

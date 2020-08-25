@@ -12,6 +12,7 @@ import ExecuteVim from './mode/executeVim';
 import Vim from './Vim'
 
 import './App.css';
+import { throws } from 'assert';
 
 
 interface AppState {
@@ -53,6 +54,7 @@ class App extends React.Component<{}, AppState> {
 		this._context = Context.getInstance("tomoya", directoryTree());
 
 		this.executeCommand = this.executeCommand.bind(this);
+		this.forceRenderCallback = this.forceRenderCallback.bind(this);
 		this.inputRef = React.createRef();
 	}
 
@@ -70,6 +72,10 @@ class App extends React.Component<{}, AppState> {
 		if (this.inputRef.current) {
 			this.inputRef.current.focus();
 		}
+	}
+
+	forceRenderCallback() {
+		this.forceUpdate();
 	}
 
 	render() {
@@ -90,7 +96,7 @@ class App extends React.Component<{}, AppState> {
 			);
 		} else if (exec instanceof ExecuteVim) {
 			return (
-				<Vim exec={exec}/>
+				<Vim exec={exec} forceRenderCallback={this.forceRenderCallback} context={this._context}/>
 			)
 		}
 	}

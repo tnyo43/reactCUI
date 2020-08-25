@@ -3,11 +3,14 @@ import React from 'react';
 import ExecuteVim from './mode/executeVim';
 
 import './Vim.css';
+import Context from './mode/context';
 
 
 
 interface VimProps {
-	exec: ExecuteVim
+	exec: ExecuteVim,
+	context: Context,
+	forceRenderCallback: () => void
 }
 
 interface VimState {
@@ -30,6 +33,9 @@ export default class Vim extends React.Component<VimProps, VimState> {
 	onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
 		const cursor = this.props.exec.onKeyDown(event);
 		this.setState({cursor: cursor});
+		if (this.props.context.getMode() !== "vim") {
+			this.props.forceRenderCallback();
+		}
 	}
 
 	render() {

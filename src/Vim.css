@@ -8,6 +8,11 @@
 
 .vim-app-edit-area {
   height: calc(100% - 29px);
+  white-space: pre;
+}
+
+.vim-app-edit-area div {
+  height: 29px;
 }
 
 .vim-mode-text {
