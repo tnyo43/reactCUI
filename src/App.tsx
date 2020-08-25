@@ -1,13 +1,16 @@
 import React from 'react';
 import CommandHistory from './CommandHistory';
 import CommandInput from './CommandInput';
-import ExecuteCommand, { Result } from './execute';
+
 import File from './entry/file';
 import Directory from './entry/directory';
-import './App.css';
 
-interface AppProps {
-}
+import Context from './mode/context';
+import ExecuteCommand, { Result } from './mode/executeCommand';
+
+import './App.css';
+import ExecuteVim from './mode/executeVim';
+
 
 interface AppState {
 	history: Array<Result>
@@ -34,27 +37,31 @@ const directoryTree = () => {
 	return root;
 }
 
-class App extends React.Component<AppProps, AppState> {
-	private exec: ExecuteCommand;
+class App extends React.Component<{}, AppState> {
+	private _context: Context;
 	private inputRef: React.RefObject<CommandInput>
 
-	constructor(props: AppProps) {
+	constructor(props: {}) {
 		super(props);
 
 		this.state = {
 			history: []
 		};
 
-		this.exec = new ExecuteCommand("tomoya", directoryTree());
+		this._context = Context.getInstance("tomoya", directoryTree());
+
 		this.executeCommand = this.executeCommand.bind(this);
 		this.inputRef = React.createRef();
 	}
 
 	executeCommand(command: string) {
-		const result = this.exec.execute(command);
-		this.setState({
-			history: this.state.history.concat([result])
-		});
+		const exec = this._context.getExecute();
+		if (exec instanceof ExecuteCommand) {
+			const result = exec.execute(command);
+			this.setState({
+				history: this.state.history.concat([result])
+			});
+		}
 	}
 
 	public handleClick = () => {
@@ -65,18 +72,26 @@ class App extends React.Component<AppProps, AppState> {
 	}
 
 	render() {
-		return (
-			<div className="App" onClick={this.handleClick}>
-				<CommandHistory history={this.state.history}/>
-				<CommandInput
-					ref={this.inputRef}
-					username={this.exec.username}
-					entry={this.exec.dir}
-					history={this.state.history.map(result => result.command).filter(command => command.replace(/\s/g, '').length > 0)}
-					executeCommand={this.executeCommand}
-				/>
-			</div>
-		);
+		const exec = this._context.getExecute();
+
+		if (exec instanceof ExecuteCommand) {
+			return (
+				<div className="App" onClick={this.handleClick}>
+					<CommandHistory history={this.state.history}/>
+					<CommandInput
+						ref={this.inputRef}
+						username={exec.username}
+						entry={exec.dir}
+						history={this.state.history.map(result => result.command).filter(command => command.replace(/\s/g, '').length > 0)}
+						executeCommand={this.executeCommand}
+					/>
+				</div>
+			);
+		} else if (exec instanceof ExecuteVim) {
+			return (
+				<div></div>
+			);
+		}
 	}
 }
 

@@ -1,4 +1,9 @@
-import Entry, { FileTreatmentError } from './entry/entry';
+import Entry, { FileTreatmentError } from '../entry/entry';
+import Execute from './execute';
+import Context from './context';
+import Directory from '../entry/directory';
+import File from '../entry/file';
+
 
 export interface Result {
     username: string,
@@ -7,13 +12,26 @@ export interface Result {
     result: Array<string>
 }
 
-export default class ExecuteCommand {
+export default class ExecuteCommand implements Execute {
 	private _username: string;
 	private entry: Entry;
+	_context: Context;
 
-	constructor(username: string, entry: Entry) {
+	private constructor(_context: Context, username: string, entry: Entry) {
+		this._context = _context;
 		this._username = username;
 		this.entry = entry;
+	}
+
+	private static singleton: ExecuteCommand;
+	public static getInstance(_context: Context, username: string, entry: Entry): ExecuteCommand {
+		if (ExecuteCommand.singleton) {
+			return ExecuteCommand.singleton;
+		} else {
+			const execute = new ExecuteCommand(_context, username, entry);
+			ExecuteCommand.singleton = execute;
+			return execute;
+		}
 	}
 
 	private help(command: string): Result {
@@ -25,7 +43,8 @@ export default class ExecuteCommand {
 			,"ls :list segments."
 			,"mkdir [dir] :create new directory."
 			,"cat [file] :open txt or md files."
-		];
+			,"vim [file] :edit file with vim."
+		]; 
 		return {
 			username: this._username,
 			entry: this.entry,
@@ -153,6 +172,36 @@ export default class ExecuteCommand {
 		};
 	}
 
+	private vim(args: Array<string>, command: string): Result {
+		const filename = args[0];
+
+		let entry: Entry | null = null;
+		try {
+			entry = this.entry.get(filename, "vim");
+		} catch (e) {
+			entry = new File(filename);
+		}
+
+		if (entry instanceof File) {
+			this._context.setVim(entry);
+			this._context.changeMode("vim");
+
+			return {
+				username: this._username,
+				entry: this.entry,
+				command: command,
+				result: []
+			};
+		} else { // vim cannot edit directory
+			return {
+				username: this._username,
+				entry: this.entry,
+				command: command,
+				result: [`vim: ${this.entry.getName()}: Is a directory`]
+			};
+		}
+	}
+
 	public execute(command: string): Result {
 		const words = command.split(" ").filter(x => x !== '');
 		if (words.length === 0) {
@@ -184,6 +233,9 @@ export default class ExecuteCommand {
 
 			case "cat":
 				return this.cat(args, command);
+
+			case "vim":
+				return this.vim(args, command);
 
 			default:
 				return {

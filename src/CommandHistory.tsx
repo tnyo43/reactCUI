@@ -1,5 +1,5 @@
 import React from 'react';
-import { Result } from './execute';
+import { Result } from './mode/executeCommand';
 
 interface CommandHistoryProps {
     history: Array<Result>
