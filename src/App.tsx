@@ -12,7 +12,6 @@ import ExecuteVim from './mode/executeVim';
 import Vim from './Vim'
 
 import './App.css';
-import { throws } from 'assert';
 
 
 interface AppState {
