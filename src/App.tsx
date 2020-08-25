@@ -36,6 +36,7 @@ const directoryTree = () => {
 
 class App extends React.Component<AppProps, AppState> {
 	private exec: ExecuteCommand;
+	private inputRef: React.RefObject<CommandInput>
 
 	constructor(props: AppProps) {
 		super(props);
@@ -46,6 +47,7 @@ class App extends React.Component<AppProps, AppState> {
 
 		this.exec = new ExecuteCommand("tomoya", directoryTree());
 		this.executeCommand = this.executeCommand.bind(this);
+		this.inputRef = React.createRef();
 	}
 
 	executeCommand(command: string) {
@@ -55,11 +57,19 @@ class App extends React.Component<AppProps, AppState> {
 		});
 	}
 
+	public handleClick = () => {
+		if (this.inputRef.current) {
+			this.inputRef.current.focus();
+		}
+		console.log("handleClick");
+	}
+
 	render() {
 		return (
-			<div className="App">
+			<div className="App" onClick={this.handleClick}>
 				<CommandHistory history={this.state.history}/>
 				<CommandInput
+					ref={this.inputRef}
 					username={this.exec.username}
 					entry={this.exec.dir}
 					history={this.state.history.map(result => result.command).filter(command => command.replace(/\s/g, '').length > 0)}
