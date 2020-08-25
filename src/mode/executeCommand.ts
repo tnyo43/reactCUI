@@ -1,19 +1,55 @@
-import Entry, { FileTreatmentError } from './entry/entry';
+import Entry, { FileTreatmentError } from '../entry/entry';
+import Execute from './execute';
+import Context from './context';
+import File from '../entry/file';
+
 
 export interface Result {
     username: string,
     entry: Entry,
     command: string,
-    result: string | null
+    result: Array<string>
 }
 
-export default class ExecuteCommand {
+export default class ExecuteCommand implements Execute {
 	private _username: string;
 	private entry: Entry;
+	private _context: Context;
 
-	constructor(username: string, entry: Entry) {
+	private constructor(_context: Context, username: string, entry: Entry) {
+		this._context = _context;
 		this._username = username;
 		this.entry = entry;
+	}
+
+	private static singleton: ExecuteCommand;
+	public static getInstance(_context: Context, username: string, entry: Entry): ExecuteCommand {
+		if (ExecuteCommand.singleton) {
+			return ExecuteCommand.singleton;
+		} else {
+			const execute = new ExecuteCommand(_context, username, entry);
+			ExecuteCommand.singleton = execute;
+			return execute;
+		}
+	}
+
+	private help(command: string): Result {
+		const result = [
+			"Basic commands"
+			,""
+			,"pwd :show path of current directory."
+			,"cd [dir] :change directory."
+			,"ls :list segments."
+			,"mkdir [dir] :create new directory."
+			,"cat [file] :open txt or md files."
+			,"vim [file] :edit file with vim."
+		]; 
+		return {
+			username: this._username,
+			entry: this.entry,
+			command: command,
+			result: result
+		};
 	}
 
 	private pwd(command: string): Result {
@@ -21,7 +57,7 @@ export default class ExecuteCommand {
 			username: this._username,
 			entry: this.entry,
 			command: command,
-			result: this.entry.pwd()
+			result: [this.entry.pwd()]
 		};
 	}
 
@@ -34,11 +70,11 @@ export default class ExecuteCommand {
 				username: this._username,
 				entry: current,
 				command: command,
-				result: null
+				result: []
 			};
 		}
 
-		let result: string | null = null;
+		let result: Array<string> = [];
 
 		if (args[0] === "..") {
 			this.entry = (this.entry.parent) ? this.entry.parent : this.entry;
@@ -51,7 +87,7 @@ export default class ExecuteCommand {
 			} catch (e) {
 				if (e instanceof FileTreatmentError) {
 					this.entry = current;
-					result = e.message;
+					result.push(e.message);
 				} else {
 					throw e;
 				}
@@ -71,7 +107,7 @@ export default class ExecuteCommand {
 			username: this._username,
 			entry: this.entry,
 			command: command,
-			result: this.entry.ls().join("\n")
+			result: this.entry.ls()
 		};
 	}
 
@@ -81,17 +117,17 @@ export default class ExecuteCommand {
 				username: this._username,
 				entry: this.entry,
 				command: command,
-				result: "usage: mkdir directory"
+				result: ["usage: mkdir directory"]
 			};
 		}
 
-		let result: string | null = null;
+		let result: Array<string> = [];
 
 		try {
 			this.entry.mkdir(args[0]);
 		} catch (e) {
 			if (e instanceof FileTreatmentError) {
-				result = e.message;
+				result.push(e.message);
 			} else {
 				throw e;
 			}
@@ -111,17 +147,17 @@ export default class ExecuteCommand {
 				username: this._username,
 				entry: this.entry,
 				command: command,
-				result: "usage: cat file"
+				result: ["usage: cat file"]
 			};
 		}
 
-		let result: string | null = null;
+		let result: Array<string> = [];
 
 		try {
-			result = this.entry.get(args[0], "cat").cat();
+			result = result.concat(this.entry.get(args[0], "cat").cat().split("\n"));
 		} catch (e) {
 			if (e instanceof FileTreatmentError) {
-				result = e.message;
+				result.push(e.message);
 			} else {
 				throw e;
 			}
@@ -135,6 +171,36 @@ export default class ExecuteCommand {
 		};
 	}
 
+	private vim(args: Array<string>, command: string): Result {
+		const filename = args[0];
+
+		let entry: Entry | null = null;
+		try {
+			entry = this.entry.get(filename, "vim");
+		} catch (e) {
+			entry = new File(filename);
+		}
+
+		if (entry instanceof File) {
+			this._context.setVim(entry);
+			this._context.changeMode("vim");
+
+			return {
+				username: this._username,
+				entry: this.entry,
+				command: command,
+				result: []
+			};
+		} else { // vim cannot edit directory
+			return {
+				username: this._username,
+				entry: this.entry,
+				command: command,
+				result: [`vim: ${this.entry.getName()}: Is a directory`]
+			};
+		}
+	}
+
 	public execute(command: string): Result {
 		const words = command.split(" ").filter(x => x !== '');
 		if (words.length === 0) {
@@ -142,13 +208,16 @@ export default class ExecuteCommand {
 				username: this._username,
 				entry: this.entry,
 				command: command,
-				result: null
+				result: []
 			};
 		}
 
 		const args = words.slice(1);
 
 		switch (words[0]) {
+			case "help":
+				return this.help(command);
+
 			case "pwd":
 				return this.pwd(command);
 
@@ -164,12 +233,15 @@ export default class ExecuteCommand {
 			case "cat":
 				return this.cat(args, command);
 
+			case "vim":
+				return this.vim(args, command);
+
 			default:
 				return {
 					username: this._username,
 					entry: this.entry,
 					command: command,
-					result: `command not found: ${words[0]}`
+					result: [`command not found: ${words[0]}`]
 				};
 		}
 

@@ -3,16 +3,18 @@
   height: 100%;
   padding: 20px;
   color: white;
+  font-family: "Space Mono";
+  font-feature-settings: "liga" 0;
 }
 
 .cli-text {
-  font-family: "Space Mono";
   font-size: 20px;
   display: flex;
 }
 
 .cli-input {
-  font-family: "Space Mono"; 
+  font-family: "Space Mono";
+  font-feature-settings: "liga" 0;
   background-color: #282c34;
   color: white;
   font-size: 20px;
@@ -22,19 +24,27 @@
 }
 
 .user-span {
-  font-family: "Space Mono"; 
   font-size: 20px;
   color: #fce300;
   padding-right: 8px;
 }
 
 .dir-span {
-  font-family: "Space Mono"; 
   font-size: 20px;
   color: #e05a00;
   padding-right: 8px;
 }
 
 .input-div {
+  font-family: "Space Mono";
+  font-feature-settings: "liga" 0;
   display: flex;
+}
+
+.cli-result {
+  font-size: 20px;
+}
+
+.cli-result div {
+  height: 29px
 }

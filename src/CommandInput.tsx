@@ -15,6 +15,8 @@ interface CommandInputState {
 }
 
 class CommandInput extends React.Component<CommandInputProps, CommandInputState> {
+    private inputRef: React.RefObject<HTMLInputElement>
+
     constructor(props: CommandInputProps) {
         super(props);
 
@@ -25,6 +27,7 @@ class CommandInput extends React.Component<CommandInputProps, CommandInputState>
         };
 
         this.onKeyDown = this.onKeyDown.bind(this);
+        this.inputRef = React.createRef();
     }
 
     onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -62,12 +65,19 @@ class CommandInput extends React.Component<CommandInputProps, CommandInputState>
         }
     }
 
+    focus() {
+		if (this.inputRef.current) {
+			this.inputRef.current.focus();
+		}
+    }
+
     render() {
         return (
             <div className="input-div">
                 <span className="user-span">{this.props.username}</span>
                 <span className="dir-span">{`${this.props.entry.getName()} $`}</span>
                 <input
+                    ref={this.inputRef}
                     className="cli-input"
                     onChange={value => this.setState({command: value.target.value})}
                     value={this.state.command}
