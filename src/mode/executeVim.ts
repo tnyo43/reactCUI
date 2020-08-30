@@ -48,6 +48,38 @@ export default class ExecuteVim implements Execute {
 		this._text = txt;
 	}
 
+
+
+	private backCursor() {
+		if (this._cursor[0] === 0) {
+			this.cursor = [0, this._cursor[1]-1];
+		}
+		if (this._cursor[1] === 0) {
+		} else {
+		}
+	}
+
+
+	private delete() {
+		if (this._cursor[0] === 0 && this._cursor[1] === 0) {
+			return;
+		}
+
+		const h = this._cursor[0], w = this._cursor[1];
+		if (w === 0) {
+			this._cursor[0]--;
+			this._cursor[1] = this._text[this._cursor[0]].length;
+
+			let txt = this._text.slice(0, h-1);
+			txt.push(this._text[h-1] + this._text[h]);
+			txt = txt.concat(this._text.slice(h+1));
+			this._text = txt;
+		} else {
+			this._cursor[1]--;
+			this._text[h] = this._text[h].slice(0, w-1).concat(this._text[h].slice(w));
+		}
+	}
+
 	private executeColon() {
 		if (this.colon.indexOf("w") > -1) {
 			if (this._file.parent !== this.entry) {
@@ -93,6 +125,9 @@ export default class ExecuteVim implements Execute {
 			case 13: // Enter
 				this.splitTextByEnter();
 				this.cursor = [this._cursor[0]+1, 0];
+				break;
+			case 8: // backspace
+				this.delete();
 				break;
 			default:
 				this.insertText(event.key);

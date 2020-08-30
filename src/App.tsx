@@ -83,6 +83,9 @@ class App extends React.Component<{}, AppState> {
 		if (exec instanceof ExecuteCommand) {
 			return (
 				<div className="App" onClick={this.handleClick}>
+					<div className="cli-result">
+                        {"type 'help' to show commands"}
+                    </div>
 					<CommandHistory history={this.state.history}/>
 					<CommandInput
 						ref={this.inputRef}
