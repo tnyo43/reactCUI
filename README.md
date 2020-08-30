@@ -14,8 +14,10 @@ root
 ```
 ## コマンド
 
+- help
 - pwd
 - cd
 - ls
 - mkdir
 - cat
+- vim
