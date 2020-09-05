@@ -19,7 +19,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build && mv build docs",
     "test": "jest",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint --max-warnings=0 '**/*.tsx' '**/*.ts'",
+    "lintfix": "eslint --fix '**/*.tsx' '**/*.ts'"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -37,8 +39,12 @@
     ]
   },
   "devDependencies": {
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.1.1",
     "react-test-renderer": "^16.13.1",
-    "ts-jest": "^26.2.0"
+    "ts-jest": "^26.2.0",
+    "typescript-eslint": "^0.0.1-alpha.0"
   },
   "jest": {
     "transform": {
@@ -63,5 +69,5 @@
       "\\.(css|less|scss|sss|styl)$": "<rootDir>/node_modules/jest-css-modules"
     }
   },
-  "homepage":"https://tnyo43.github.io/reactCUI/"
+  "homepage": "https://tnyo43.github.io/reactCUI/"
 }
