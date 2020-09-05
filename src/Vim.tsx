@@ -38,8 +38,8 @@ export default class Vim extends React.Component<VimProps, VimState> {
     return (
       <div className="vim-app" onKeyDown={this.onKeyDown} tabIndex={0}>
         <div className="vim-app-edit-area">
-          {this.props.exec.text.map((r) => (
-            <div>{r}</div>
+          {this.props.exec.text.map((r, index) => (
+            <div key={index}>{r}</div>
           ))}
         </div>
         <div className="vim-mode-text">{this.props.exec.getModeText()}</div>

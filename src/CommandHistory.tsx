@@ -18,8 +18,8 @@ const CommandHistory: React.FC<CommandHistoryProps> = (
             <span>{data.command}</span>
           </div>
           <div className="cli-result">
-            {data.result.map((r) => (
-              <div>{r}</div>
+            {data.result.map((r, index) => (
+              <div key={index}>{r}</div>
             ))}
           </div>
         </>
