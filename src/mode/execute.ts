@@ -1,2 +1,1 @@
-export default interface Execute {
-}
+export default interface Execute {}

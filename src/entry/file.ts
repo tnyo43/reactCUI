@@ -1,24 +1,24 @@
-import Entry from './entry';
+import Entry from "./entry";
 
 export default class File extends Entry {
-	private name: string;
-	private content: string;
+  private name: string;
+  private content: string;
 
-	constructor(name: string) {
-		super();
-		this.name = name;
-		this.content = "";
-	}
+  constructor(name: string) {
+    super();
+    this.name = name;
+    this.content = "";
+  }
 
-	public edit(content: string) {
-		this.content = content
-	}
+  public edit(content: string) {
+    this.content = content;
+  }
 
-	public cat() {
-		return this.content;
-	}
+  public cat() {
+    return this.content;
+  }
 
-	public getName() {
-		return this.name;
-	}
+  public getName() {
+    return this.name;
+  }
 }
