@@ -29,8 +29,8 @@ export const Vim: React.FC<VimProps> = ({
   return (
     <div className="vim-app" onKeyDown={onKeyDown} tabIndex={0}>
       <div className="vim-app-edit-area">
-        {exec.text.map((r) => (
-          <div>{r}</div>
+        {exec.text.map((r, index) => (
+          <div key={index}>{r}</div>
         ))}
       </div>
       <div className="vim-mode-text">{exec.getModeText()}</div>
