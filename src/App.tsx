@@ -9,7 +9,7 @@ import Context from "./mode/context";
 import ExecuteCommand, { Result } from "./mode/executeCommand";
 import ExecuteVim from "./mode/executeVim";
 
-import Vim from "./Vim";
+import { Vim } from "./Vim";
 
 import "./App.css";
 
