@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import { Result } from "./mode/executeCommand";
 
@@ -5,9 +6,7 @@ interface CommandHistoryProps {
   history: Array<Result>;
 }
 
-const CommandHistory: React.FC<CommandHistoryProps> = (
-  props: CommandHistoryProps
-) => {
+export const CommandHistory: React.FC<CommandHistoryProps> = (props) => {
   return (
     <div>
       {props.history.map((data) => (
@@ -27,5 +26,3 @@ const CommandHistory: React.FC<CommandHistoryProps> = (
     </div>
   );
 };
-
-export default CommandHistory;

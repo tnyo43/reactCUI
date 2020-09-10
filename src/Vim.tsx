@@ -1,9 +1,10 @@
-import React from "react";
+/* eslint-disable react/prop-types */
+import React, { useState, useCallback } from "react";
 
 import ExecuteVim from "./mode/executeVim";
+import Context from "./mode/context";
 
 import "./Vim.css";
-import Context from "./mode/context";
 
 interface VimProps {
   exec: ExecuteVim;
@@ -11,48 +12,36 @@ interface VimProps {
   forceRenderCallback: () => void;
 }
 
-interface VimState {
-  cursor: [number, number];
-}
+export const Vim: React.FC<VimProps> = (props) => {
+  const [cursor, setCursor] = useState([0, 0]);
 
-export default class Vim extends React.Component<VimProps, VimState> {
-  constructor(props: VimProps) {
-    super(props);
+  const onKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      console.log("key down");
+      const cursor = props.exec.onKeyDown(event);
+      setCursor(cursor);
+      props.forceRenderCallback();
+    },
+    []
+  );
 
-    this.state = {
-      cursor: this.props.exec.cursor,
-    };
-
-    this.onKeyDown = this.onKeyDown.bind(this);
-  }
-
-  onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
-    const cursor = this.props.exec.onKeyDown(event);
-    this.setState({ cursor: cursor });
-    if (this.props.context.getMode() !== "vim") {
-      this.props.forceRenderCallback();
-    }
-  }
-
-  render() {
-    return (
-      <div className="vim-app" onKeyDown={this.onKeyDown} tabIndex={0}>
-        <div className="vim-app-edit-area">
-          {this.props.exec.text.map((r, index) => (
-            <div key={index}>{r}</div>
-          ))}
-        </div>
-        <div className="vim-mode-text">{this.props.exec.getModeText()}</div>
-        <div
-          className="vim-cursor"
-          style={{
-            top: this.state.cursor[0] * 29,
-            left: this.state.cursor[1] * 12.25,
-          }}
-        >
-          {this.props.exec.getcursorChar()}
-        </div>
+  return (
+    <div className="vim-app" onKeyDown={onKeyDown} tabIndex={0}>
+      <div className="vim-app-edit-area">
+        {props.exec.text.map((r, index) => (
+          <div key={index}>{r}</div>
+        ))}
       </div>
-    );
-  }
-}
+      <div className="vim-mode-text">{props.exec.getModeText()}</div>
+      <div
+        className="vim-cursor"
+        style={{
+          top: cursor[0] * 29,
+          left: cursor[1] * 12.25,
+        }}
+      >
+        {props.exec.getcursorChar()}
+      </div>
+    </div>
+  );
+};

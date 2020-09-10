@@ -47,15 +47,6 @@ export default class ExecuteVim implements Execute {
     this._text = txt;
   }
 
-  private backCursor() {
-    if (this._cursor[0] === 0) {
-      this.cursor = [0, this._cursor[1] - 1];
-    }
-    if (this._cursor[1] === 0) {
-    } else {
-    }
-  }
-
   private delete() {
     if (this._cursor[0] === 0 && this._cursor[1] === 0) {
       return;

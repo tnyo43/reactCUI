@@ -14,7 +14,7 @@ interface CommandInputState {
   index: number;
 }
 
-class CommandInput extends React.Component<
+export default class CommandInput extends React.Component<
   CommandInputProps,
   CommandInputState
 > {
@@ -94,5 +94,3 @@ class CommandInput extends React.Component<
     );
   }
 }
-
-export default CommandInput;

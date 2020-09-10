@@ -1,5 +1,5 @@
-import React from "react";
-import CommandHistory from "./CommandHistory";
+import React, { createRef, useRef, useState, useCallback } from "react";
+import { CommandHistory } from "./CommandHistory";
 import CommandInput from "./CommandInput";
 
 import File from "./entry/file";
@@ -9,13 +9,9 @@ import Context from "./mode/context";
 import ExecuteCommand, { Result } from "./mode/executeCommand";
 import ExecuteVim from "./mode/executeVim";
 
-import Vim from "./Vim";
+import { Vim } from "./Vim";
 
 import "./App.css";
-
-interface AppState {
-  history: Array<Result>;
-}
 
 const directoryTree = () => {
   const root = Directory.root();
@@ -38,73 +34,59 @@ const directoryTree = () => {
   return root;
 };
 
-class App extends React.Component<{}, AppState> {
-  private _context: Context;
-  private inputRef: React.RefObject<CommandInput>;
+export const App: React.FC = () => {
+  const _context = Context.getInstance("tomoya", directoryTree());
+  const inputRef = useRef(createRef<CommandInput>());
 
-  constructor(props: {}) {
-    super(props);
+  const [history, setHistory] = useState(Array<Result>(0));
+  const [, forceUpdate] = useState(false);
 
-    this.state = {
-      history: [],
-    };
-
-    this._context = Context.getInstance("tomoya", directoryTree());
-
-    this.executeCommand = this.executeCommand.bind(this);
-    this.forceRenderCallback = this.forceRenderCallback.bind(this);
-    this.inputRef = React.createRef();
-  }
-
-  executeCommand(command: string) {
-    const exec = this._context.getExecute();
+  const executeCommand = (command: string) => {
+    const exec = _context.getExecute();
     if (exec instanceof ExecuteCommand) {
       const result = exec.execute(command);
-      this.setState({
-        history: this.state.history.concat([result]),
-      });
-    }
-  }
-
-  public handleClick = () => {
-    if (this.inputRef.current) {
-      this.inputRef.current.focus();
+      setHistory(history.concat([result]));
     }
   };
 
-  forceRenderCallback() {
-    this.forceUpdate();
-  }
+  const handleClick = useCallback(() => {
+    const ref = inputRef.current;
+    ref?.current?.focus();
+  }, []);
 
-  render() {
-    const exec = this._context.getExecute();
+  const forceRenderCallback = useCallback(() => {
+    forceUpdate((n) => !n);
+  }, []);
 
-    if (exec instanceof ExecuteCommand) {
-      return (
-        <div className="App" onClick={this.handleClick}>
-          <div className="cli-result">{"type 'help' to show commands"}</div>
-          <CommandHistory history={this.state.history} />
-          <CommandInput
-            ref={this.inputRef}
-            username={exec.username}
-            entry={exec.dir}
-            history={this.state.history
-              .map((result) => result.command)
-              .filter((command) => command.replace(/\s/g, "").length > 0)}
-            executeCommand={this.executeCommand}
-          />
-        </div>
-      );
-    } else if (exec instanceof ExecuteVim) {
-      return (
-        <Vim
-          exec={exec}
-          forceRenderCallback={this.forceRenderCallback}
-          context={this._context}
+  const exec = _context.getExecute();
+
+  console.log(_context, exec);
+  if (exec instanceof ExecuteCommand) {
+    return (
+      <div className="App" onClick={handleClick}>
+        <div className="cli-result">{"type 'help' to show commands"}</div>
+        <CommandHistory history={history} />
+        <CommandInput
+          ref={inputRef.current}
+          username={exec.username}
+          entry={exec.dir}
+          history={history
+            .map((result) => result.command)
+            .filter((command) => command.replace(/\s/g, "").length > 0)}
+          executeCommand={executeCommand}
         />
-      );
-    }
+      </div>
+    );
+  } else if (exec instanceof ExecuteVim) {
+    return (
+      <Vim
+        exec={exec}
+        forceRenderCallback={forceRenderCallback}
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        context={_context}
+      />
+    );
+  } else {
+    return <></>;
   }
-}
-
-export default App;
+};
