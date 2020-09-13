@@ -1,4 +1,4 @@
-import React, { createRef, useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import { CommandHistory } from "./CommandHistory";
 import CommandInput from "./CommandInput";
 
@@ -36,7 +36,7 @@ const directoryTree = () => {
 
 export const App: React.FC = () => {
   const _context = Context.getInstance("tomoya", directoryTree());
-  const inputRef = useRef(createRef<CommandInput>());
+  const inputRef = useRef<CommandInput>(null);
 
   const [history, setHistory] = useState(Array<Result>(0));
   const [, forceUpdate] = useState(false);
@@ -50,9 +50,8 @@ export const App: React.FC = () => {
   };
 
   const handleClick = useCallback(() => {
-    const ref = inputRef.current;
-    ref?.current?.focus();
-  }, []);
+    inputRef.current?.focus();
+  }, [inputRef]);
 
   const forceRenderCallback = useCallback(() => {
     forceUpdate((n) => !n);
@@ -67,7 +66,7 @@ export const App: React.FC = () => {
         <div className="cli-result">{"type 'help' to show commands"}</div>
         <CommandHistory history={history} />
         <CommandInput
-          ref={inputRef.current}
+          ref={inputRef}
           username={exec.username}
           entry={exec.dir}
           history={history
